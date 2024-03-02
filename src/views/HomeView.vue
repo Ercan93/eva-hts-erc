@@ -2,6 +2,7 @@
 import StackedBarChart from "@/components/StackedBarChart.vue";
 import AppSelect from "@/components/AppSelect.vue";
 import AppTable from "@/components/AppTable.vue";
+import AppPagination from "@/components/AppPagination.vue";
 
 const options = [
   { value: 60, name: "Last 60 Days" },
@@ -98,5 +99,6 @@ const tableBodyData = [
     </div>
     <StackedBarChart />
     <AppTable :header-options="tableHeaderOptions" :body-data="tableBodyData" />
+    <AppPagination :total-pages="7" :current-page="1" />
   </main>
 </template>
