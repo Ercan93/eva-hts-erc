@@ -38,9 +38,14 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import AppButton from "@/components/AppButton.vue";
 import AppInput from "@/components/AppInput.vue";
-import { ref } from "vue";
+
+const store = useStore();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
@@ -49,7 +54,18 @@ const emailOnChange = (value) => (email.value = value);
 const passwordOnChange = (value) => (password.value = value);
 
 const login = () => {
-  console.log("Email:", email.value);
-  console.log("Password:", password.value);
+  if (!email.value || !password.value) {
+    console.log("Please enter email and password");
+    return;
+  }
+  store
+    .dispatch("user/setUser", {
+      email: email.value,
+      password: password.value,
+    })
+    .then(() => {
+      console.log("User logged in successfully!");
+      router.push("/");
+    });
 };
 </script>
