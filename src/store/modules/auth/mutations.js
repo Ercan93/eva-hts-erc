@@ -5,4 +5,7 @@ export default {
   SET_IS_LOGGED_IN: (state, isLoggedIn) => {
     state.isLoggedIn = isLoggedIn;
   },
+  SET_TOKEN: (state, token) => {
+    state.token = token;
+  },
 };

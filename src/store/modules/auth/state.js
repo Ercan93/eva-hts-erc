@@ -1,4 +1,5 @@
 export default {
-  email: "test@test.com",
+  email: "",
   isLoggedIn: false,
+  token: "",
 };
