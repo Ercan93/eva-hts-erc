@@ -15,16 +15,11 @@ export default {
       chart: {
         type: "column",
         height: 600,
-        backgroundColor: "#1e40af",
-        plotBackgroundColor: "#1e40af",
         borderWidth: 0,
       },
       title: {
         text: "Daily Sales",
         align: "left",
-        style: {
-          color: "#fff",
-        },
       },
       xAxis: {
         categories: [
@@ -34,34 +29,14 @@ export default {
           "Tuesday 12-10-2021",
           "Tuesday 26-10-2021",
         ],
-        labels: {
-          style: {
-            color: "#fff",
-          },
-        },
-        lineColor: "#1e40af",
-        title: {
-          style: {
-            color: "#fff",
-          },
-        },
       },
       yAxis: {
         min: 0,
         title: {
           text: "Count trophies",
-          style: {
-            color: "#fff",
-          },
         },
         stackLabels: {
           enabled: false,
-        },
-        gridLineColor: "#1e40af",
-        labels: {
-          style: {
-            color: "#fff",
-          },
         },
       },
       colors: ["#71ECC5", "#7F85E9", "#5D33EB"],
@@ -71,25 +46,12 @@ export default {
         verticalAlign: "bottom",
         y: 50,
         shadow: false,
-        backgroundColor: "#1e3988",
-        itemStyle: {
-          color: "#fff",
-        },
       },
       tooltip: {
         headerFormat: "<b>{point.x}</b><br/>",
         pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}",
-        backgroundColor: "#2f3f3f",
         borderColor: "#444",
         borderRadius: 5,
-        style: {
-          color: "#fff",
-        },
-      },
-      credits: {
-        style: {
-          color: "#1e40af",
-        },
       },
       plotOptions: {
         column: {
@@ -101,12 +63,6 @@ export default {
           events: {
             click: onBarClick,
           },
-        },
-        series: {
-          dataLabels: {
-            color: "#fff",
-          },
-          borderWidth: 0,
         },
       },
       series: [
