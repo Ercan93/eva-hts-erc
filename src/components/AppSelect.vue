@@ -1,3 +1,19 @@
+<script setup>
+import { toRefs } from "vue";
+
+const props = defineProps({
+  options: {
+    type: Array,
+    required: true,
+  },
+  label: {
+    type: String,
+  },
+});
+
+const { options, label } = toRefs(props);
+</script>
+
 <template>
   <div class="max-w-sm">
     <label
@@ -21,19 +37,3 @@
     </select>
   </div>
 </template>
-
-<script setup>
-import { toRefs } from "vue";
-
-const props = defineProps({
-  options: {
-    type: Array,
-    required: true,
-  },
-  label: {
-    type: String,
-  },
-});
-
-const { options, label } = toRefs(props);
-</script>
