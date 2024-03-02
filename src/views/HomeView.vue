@@ -1,5 +1,5 @@
 <script setup>
-import StackedBarChart from "@/components/StackedBarChart.vue";
+import BarChart from "@/components/BarChart.vue";
 import AppSelect from "@/components/AppSelect.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppPagination from "@/components/AppPagination.vue";
@@ -88,17 +88,25 @@ const tableBodyData = [
     ],
   },
 ];
-
 </script>
 
 <template>
-  <main class="container-fluid bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 p-8">
+  <main
+    class="container-fluid bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 p-8"
+  >
     <div class="flex items-center justify-between pb-8">
-      <p class="text-3xl text-white font-bold">Daily Sales</p>
+      <p class="text-3xl text-white font-bold">Welcome User,</p>
       <AppSelect :options="options" />
     </div>
-    <StackedBarChart />
-    <AppTable :header-options="tableHeaderOptions" :body-data="tableBodyData" />
-    <AppPagination :total-pages="7" :current-page="1" />
+    <div class="">
+      <BarChart />
+    </div>
+    <div class="mt-4">
+      <AppTable
+        :header-options="tableHeaderOptions"
+        :body-data="tableBodyData"
+      />
+      <AppPagination :total-pages="7" :current-page="1" />
+    </div>
   </main>
 </template>
