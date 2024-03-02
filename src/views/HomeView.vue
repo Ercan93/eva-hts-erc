@@ -1,11 +1,14 @@
 <script setup>
+import { ref } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import BarChart from "@/components/BarChart.vue";
 import AppSelect from "@/components/AppSelect.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppPagination from "@/components/AppPagination.vue";
-import { useStore } from "vuex";
-import { ref } from "vue";
-const store = useStore();
+
+const firstName = ref("");
+const lastName = ref("");
 const options = [
   { value: 60, name: "Last 60 Days" },
   { value: 30, name: "Last 30 Days", selected: true },
@@ -13,19 +16,26 @@ const options = [
   { value: 7, name: "Last 7 Days" },
 ];
 
-const firstName = ref("");
-const lastName = ref("");
+const { getters, dispatch } = useStore();
+const router = useRouter();
 
-const userData = store.getters["user/getUser"];
+const userData = getters["user/getUser"];
 if (userData !== null) {
-  firstName.value = userData[0].Data.user.firstName;
-  lastName.value = userData[0].Data.user.lastName;
+  firstName.value = userData.Data.user.firstName;
+  lastName.value = userData.Data.user.lastName;
+} else {
+  const user = JSON.parse(localStorage.getItem("eva-hts-user"));
+  firstName.value = user.Data.firstName;
+  lastName.value = user.Data.lastName;
 }
 
-store.dispatch("sales/setSalesOverview", {
-  email: "email",
-  password: "password",
-});
+dispatch("sales/setSalesOverview");
+
+function logout() {
+  dispatch("auth/logout").then(() => {
+    router.push("/login");
+  });
+}
 </script>
 
 <template>
@@ -37,6 +47,12 @@ store.dispatch("sales/setSalesOverview", {
         Welcome {{ firstName }} {{ lastName }}
       </p>
       <AppSelect :options="options" />
+      <button
+        class="px-4 py-2 text-white bg-red-800 rounded-md hover:bg-red-600"
+        @click="logout"
+      >
+        Logout
+      </button>
     </div>
     <div class="bg-white">
       <BarChart />
