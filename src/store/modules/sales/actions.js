@@ -8,8 +8,8 @@ export default {
   setSalesOverview: ({ commit }, payload) => {
     commit("SET_SALES_OVERVIEW", payload);
   },
-  fetchSalesOverview: (context) => {
-/*     const data = localStorage.getItem("eva-hts-sales-overview");
+  fetchSalesOverview: (context, payload) => {
+    /*     const data = localStorage.getItem("eva-hts-sales-overview");
     if (data) {
       context.dispatch("setSalesOverview", JSON.parse(data));
       return;
@@ -32,7 +32,9 @@ export default {
     })
       .then((response) => response.json())
       .then(({ data: data }) => {
+        data = data.splice(0, payload);
         context.dispatch("setSalesOverview", data);
+        localStorage.setItem("eva-hts-sales-overview", JSON.stringify(data));
       })
       .catch((error) => {
         console.error(error);
