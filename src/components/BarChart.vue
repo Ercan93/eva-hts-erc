@@ -1,14 +1,22 @@
 <template>
-  <div>
-    <charts :options="chartOptions"></charts>
-  </div>
+  <charts :options="chartOptions"></charts>
 </template>
 
 <script>
 import { reactive } from "vue";
 export default {
   name: "BarChart",
-  setup() {
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+    },
+    series: {
+      type: Array,
+      required: true,
+    },
+  },
+  setup(props) {
     const selectedElements = reactive([]);
 
     const chartOptions = {
@@ -22,24 +30,19 @@ export default {
         align: "left",
       },
       xAxis: {
-        categories: [
-          "Tuesday 19-09-2021",
-          "Tuesday 14-09-2021",
-          "Tuesday 11-09-2021",
-          "Tuesday 12-10-2021",
-          "Tuesday 26-10-2021",
-        ],
+        categories: props.categories,
       },
+      series: props.series,
       yAxis: {
         min: 0,
         title: {
-          text: "Count trophies",
+          text: "Amount($)",
         },
         stackLabels: {
           enabled: false,
         },
       },
-      colors: ["#71ECC5", "#7F85E9", "#5D33EB"],
+      colors: ["#71ECC5", "#5D33EB", "#7F85E9"],
       legend: {
         align: "center",
         x: 0,
@@ -65,26 +68,6 @@ export default {
           },
         },
       },
-      series: [
-        {
-          name: "FBM Sales",
-          data: [3, 5, 1, 13, 8],
-          dataLabels: {
-            enabled: false,
-          },
-        },
-        {
-          name: "Profit",
-          data: [0, 2, 6, 3, 4],
-          dataLabels: {
-            enabled: false,
-          },
-        },
-        {
-          name: "FBA Sales",
-          data: [14, 8, 8, 12, 6],
-        },
-      ],
     };
 
     function onBarClick(event) {

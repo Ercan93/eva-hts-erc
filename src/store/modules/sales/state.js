@@ -1,5 +1,5 @@
 export default {
   skuRefundRate: {},
   skuSalesList: {},
-  salesOverview: {},
+  salesOverview: null,
 };
