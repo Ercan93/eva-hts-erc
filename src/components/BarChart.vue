@@ -16,7 +16,8 @@ export default {
       required: true,
     },
   },
-  setup(props) {
+  emits: ["elementsSelected"],
+  setup(props, context) {
     const selectedElements = reactive([]);
 
     const chartOptions = {
@@ -74,12 +75,14 @@ export default {
     };
 
     function onBarClick(event) {
-      if (event.point === undefined) return;
+      if (event.point === undefined || event.point.series.name !== "FBA Sales")
+        return;
       const { point } = event;
       if (selectedElements.includes(point)) {
         selectedElements.splice(selectedElements.indexOf(point), 1);
         point.color = "#7F85E9";
         chartOptions.series[2].data[point.index] = point;
+        context.emit("elementsSelected", selectedElements);
         return;
       }
 
@@ -88,6 +91,7 @@ export default {
       point.color = "green";
       chartOptions.series[2].data[point.index] = point;
       selectedElements.push(point);
+      context.emit("elementsSelected", selectedElements);
     }
 
     return { chartOptions };
