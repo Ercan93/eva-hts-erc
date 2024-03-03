@@ -17,8 +17,18 @@ const options = [
 const firstName = ref("");
 const lastName = ref("");
 
+const dateRange = ref(30);
+
 const { getters, dispatch } = useStore();
 const router = useRouter();
+
+const tableHeaderOptions = reactive([
+  { text: "SKU", value: "sku" },
+  { text: "Product Name", value: "productName" },
+  { text: "SKU Refund Rate", value: "skuRefundRate" },
+]);
+
+const tableBodyData = reactive([]);
 
 // User Name
 const userData = getters["user/getUser"];
@@ -35,8 +45,13 @@ if (userData !== null) {
 // Sales Overview
 const categories = reactive([]);
 const series = reactive([]);
+const selectedElements = reactive([]);
 
-dispatch("sales/fetchSalesOverview");
+dispatch("sales/fetchSalesOverview", dateRange.value);
+
+watch(dateRange, (val) => {
+  dispatch("sales/fetchSalesOverview", val);
+});
 
 watch(
   () => getters["sales/getSalesOverview"],
@@ -47,6 +62,9 @@ watch(
 
 function updateChart(salesOverview) {
   if (salesOverview.length > 0) {
+    categories.splice(0, categories.length);
+    series.splice(0, series.length);
+
     categories.push(...salesOverview.map((item) => item.date));
     series.push(
       {
@@ -85,6 +103,15 @@ function updateChart(salesOverview) {
 }
 // End of Sales Overview
 
+function handleDateSelect(val) {
+  dateRange.value = val;
+}
+
+function handleElementsSelected(val) {
+  selectedElements.splice(0, selectedElements.length);
+  selectedElements.push(...val);
+}
+
 function logout() {
   dispatch("auth/logout").then(() => {
     router.push("/login");
@@ -94,14 +121,14 @@ function logout() {
 
 <template>
   <main
-    class="container-fluid bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 p-8"
+    class="Home container-fluid bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 p-8"
   >
     <div class="flex items-center justify-between pb-8">
       <p class="text-3xl text-white font-bold">
         Welcome {{ firstName }} {{ lastName }}
       </p>
       <div class="flex">
-        <AppSelect :options="options" />
+        <AppSelect @optionSelected="handleDateSelect" :options="options" />
         <button
           class="px-4 py-2 ml-8 text-white bg-red-800 rounded-md hover:bg-red-600"
           @click="logout"
@@ -111,14 +138,23 @@ function logout() {
       </div>
     </div>
     <div class="bg-white">
-      <BarChart :categories="categories" :series="series" />
+      <BarChart
+        @elementsSelected="handleElementsSelected"
+        :categories="categories"
+        :series="series"
+      />
     </div>
     <div class="mt-4">
       <AppTable
         :header-options="tableHeaderOptions"
         :body-data="tableBodyData"
       />
-      <AppPagination :total-pages="3" :current-page="1" />
+      <AppPagination :total-pages="1" :current-page="1" />
     </div>
   </main>
 </template>
+<style>
+.Home {
+  min-height: 100vh;
+}
+</style>
