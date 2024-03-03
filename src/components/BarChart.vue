@@ -81,7 +81,6 @@ export default {
       if (selectedElements.includes(point)) {
         selectedElements.splice(selectedElements.indexOf(point), 1);
         point.color = "#7F85E9";
-        chartOptions.series[2].data[point.index] = point;
         context.emit("elementsSelected", selectedElements);
         return;
       }
@@ -89,7 +88,6 @@ export default {
       if (selectedElements.length === 2) return;
 
       point.color = "green";
-      chartOptions.series[2].data[point.index] = point;
       selectedElements.push(point);
       context.emit("elementsSelected", selectedElements);
     }
