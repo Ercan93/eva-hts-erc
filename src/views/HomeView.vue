@@ -1,24 +1,26 @@
 <script setup>
-import { ref } from "vue";
+import { reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import Highcharts from "highcharts";
 import BarChart from "@/components/BarChart.vue";
 import AppSelect from "@/components/AppSelect.vue";
 import AppTable from "@/components/AppTable.vue";
 import AppPagination from "@/components/AppPagination.vue";
 
-const firstName = ref("");
-const lastName = ref("");
 const options = [
-  { value: 60, name: "Last 60 Days" },
   { value: 30, name: "Last 30 Days", selected: true },
+  { value: 21, name: "Last 21 Days" },
   { value: 14, name: "Last 14 Days" },
   { value: 7, name: "Last 7 Days" },
 ];
+const firstName = ref("");
+const lastName = ref("");
 
 const { getters, dispatch } = useStore();
 const router = useRouter();
 
+// User Name
 const userData = getters["user/getUser"];
 if (userData !== null) {
   firstName.value = userData.Data.user.firstName;
@@ -28,8 +30,60 @@ if (userData !== null) {
   firstName.value = user.Data.firstName;
   lastName.value = user.Data.lastName;
 }
+// End of User Name
 
-dispatch("sales/setSalesOverview");
+// Sales Overview
+const categories = reactive([]);
+const series = reactive([]);
+
+dispatch("sales/fetchSalesOverview");
+
+watch(
+  () => getters["sales/getSalesOverview"],
+  (value) => {
+    updateChart(value);
+  }
+);
+
+function updateChart(salesOverview) {
+  if (salesOverview.length > 0) {
+    categories.push(...salesOverview.map((item) => item.date));
+    series.push(
+      {
+        name: "Profit",
+        data: salesOverview.map((item) => item.profit * 49),
+        dataLabels: {
+          enabled: false,
+        },
+      },
+      {
+        name: "FBM Sales",
+        data: salesOverview.map((item) => item.prevYearAmount * 9),
+        dataLabels: {
+          enabled: false,
+        },
+      },
+      {
+        name: "FBA Sales",
+        data: salesOverview.map((item) => item.prevYearOrderCount * 427),
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return "$ " + Highcharts.numberFormat(this.y, 0, ".", ",");
+          },
+          rotation: 270,
+          style: {
+            fontSize: "18px",
+            fontWeight: "bold",
+            color: "#fff",
+            textShadow: "none",
+          },
+        },
+      }
+    );
+  }
+}
+// End of Sales Overview
 
 function logout() {
   dispatch("auth/logout").then(() => {
@@ -46,23 +100,25 @@ function logout() {
       <p class="text-3xl text-white font-bold">
         Welcome {{ firstName }} {{ lastName }}
       </p>
-      <AppSelect :options="options" />
-      <button
-        class="px-4 py-2 text-white bg-red-800 rounded-md hover:bg-red-600"
-        @click="logout"
-      >
-        Logout
-      </button>
+      <div class="flex">
+        <AppSelect :options="options" />
+        <button
+          class="px-4 py-2 ml-8 text-white bg-red-800 rounded-md hover:bg-red-600"
+          @click="logout"
+        >
+          Logout
+        </button>
+      </div>
     </div>
     <div class="bg-white">
-      <BarChart />
+      <BarChart :categories="categories" :series="series" />
     </div>
     <div class="mt-4">
       <AppTable
         :header-options="tableHeaderOptions"
         :body-data="tableBodyData"
       />
-      <AppPagination :total-pages="7" :current-page="1" />
+      <AppPagination :total-pages="3" :current-page="1" />
     </div>
   </main>
 </template>
