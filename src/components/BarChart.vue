@@ -25,6 +25,9 @@ export default {
         height: 600,
         borderWidth: 0,
       },
+      touch: {
+        enabled: true,
+      },
       title: {
         text: "Daily Sales",
         align: "left",
